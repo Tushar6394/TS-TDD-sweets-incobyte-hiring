@@ -1,4 +1,4 @@
-# 🍬 **Katabolt** - Test-Driven Sweet Shop Empire
+# 🍬 **Sweets Shop** - Test-Driven Sweet Shop Empire
 
 > **"Where every line of code is tested before it's sweet enough to ship!"** ✨
 
