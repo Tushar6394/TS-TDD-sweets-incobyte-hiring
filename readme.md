@@ -30,7 +30,9 @@ A fully-functional sweet shop with authentication, role-based access, inventory 
 | 🎨 **Modern Tech Stack** | TypeScript, React, Express, MongoDB, Tailwind CSS |
 | 🔐 **Enterprise Security** | JWT auth, bcrypt hashing, role-based access control |
 | 📦 **Inventory Management** | Real-time stock validation, restocking, admin controls |
+| 🛒 **Shopping Cart System** | Add to cart, quantity management, persistent storage |
 | 🎭 **Dual Roles** | Separate customer & admin experiences |
+| 📂 **Category Shopping** | Browse sweets by categories (cake, candy, chocolate, etc.) |
 | 📱 **Responsive Design** | Pixel-perfect on mobile, tablet, and desktop |
 | 🤖 **AI-Assisted** | Built with GitHub Copilot as a pair programming partner |
 
@@ -59,17 +61,56 @@ Before writing a single line of code, I invested time in understanding TDD philo
 
 ### 👥 **As a Customer:**
 - 🔍 Browse & search through our sweet collection
-- 🛒 Add items to cart with real-time stock checks
-- 💳 Checkout with automatic calculations
-- 📜 View your order history
+- 📂 Shop by categories (Cake, Candy, Chocolate, Lollipop, Cookie)
+- 🛒 Add items to cart with real-time stock validation
+- 🛍️ Manage cart: adjust quantities, remove items, view totals
+- 💳 Secure checkout with automatic order processing
+- 📜 View your order history and dashboard
 - 🔐 Secure authentication with JWT tokens
 
 ### 👨‍💼 **As an Admin:**
-- ➕ Add new sweets to the inventory
+- ➕ **Add Sweet**: Create new products directly from shop page
+- 📂 **Types of Sweets**: View and manage product categories
+- 📊 **Total Sweets**: Monitor complete inventory statistics
+- ⚙️ **Manage Inventory**: Access full admin dashboard
 - ✏️ Update product details & pricing
 - 🗑️ Remove discontinued items
-- 📦 Restock inventory
-- 👀 Monitor inventory
+- 📦 Restock inventory with real-time updates
+- 👀 Monitor inventory levels and sales
+
+---
+
+## 🛒 **Shopping Cart System**
+
+The shopping cart provides a seamless e-commerce experience:
+
+### **Features:**
+- **Add to Cart**: One-click addition with stock validation
+- **Persistent Storage**: Cart survives browser sessions
+- **Quantity Management**: Increase/decrease quantities with limits
+- **Real-time Updates**: Live total calculations
+- **Secure Checkout**: Batch purchase processing
+- **Empty State**: Helpful prompts when cart is empty
+
+### **Cart Flow:**
+1. Browse sweets → Add to cart → View cart icon with count
+2. Manage items in cart → Adjust quantities → Remove items
+3. Secure checkout → Automatic order processing → Success confirmation
+
+---
+
+## 👨‍💼 **Admin Shop Sections**
+
+Admins have direct access to management tools right from the shop page:
+
+### **Available Sections:**
+- **🍬 Add Sweet**: Create new products with full form validation
+- **📂 Types of Sweets**: View and manage product categories
+- **📊 Total Sweets**: Complete inventory overview with statistics
+- **⚙️ Manage Inventory**: Quick access to full admin dashboard
+
+### **Quick Access:**
+Located in the "Admin Panel" on the main shop page for immediate access to essential management functions.
 
 ---
 
@@ -82,8 +123,9 @@ Before writing a single line of code, I invested time in understanding TDD philo
 │  │  React Frontend (Vite + TypeScript + Tailwind)      │   │
 │  │  • Authentication UI                                  │   │
 │  │  • Sweet Catalog & Search                            │   │
-│  │  • Shopping Cart                                      │   │
-│  │  • Admin Dashboard                                    │   │
+│  │  • Category-based Shopping                           │   │
+│  │  • Shopping Cart & Checkout                          │   │
+│  │  • Admin Dashboard & Shop Management                │   │
 │  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
                             ↕ HTTP/REST
@@ -93,7 +135,13 @@ Before writing a single line of code, I invested time in understanding TDD philo
 │  │  📍 Routes                                            │   │
 │  │  ├─ /api/auth (register, login, profile)            │   │
 │  │  ├─ /api/sweets (CRUD operations)                    │   │
-│  │  └─ /api/cart (cart management)                      │   │
+│  │  ├─ /shop (main shop page)                           │   │
+│  │  ├─ /shop/:category (category pages)                 │   │
+│  │  ├─ /shop/add-sweet (admin: add products)            │   │
+│  │  ├─ /shop/categories (admin: manage categories)      │   │
+│  │  ├─ /shop/total-sweets (admin: inventory stats)      │   │
+│  │  ├─ /shop/manage-inventory (admin: inventory mgmt)   │   │
+│  │  └─ /cart (shopping cart)                            │   │
 │  └──────────────────────────────────────────────────────┘   │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │  🛡️ Middleware                                        │   │
@@ -124,6 +172,88 @@ Before writing a single line of code, I invested time in understanding TDD philo
 │  │  ├─ Sweet (name, category, price, quantity)         │   │
 │  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📁 **Project Structure**
+
+```
+katabolt/
+├── 📄 readme.md                 # Comprehensive documentation
+├── 📄 package.json              # Root package configuration
+│
+├── backend/                     # Express.js API Server
+│   ├── 📄 package.json
+│   ├── 📄 tsconfig.json
+│   ├── 📄 jest.config.js
+│   ├── src/
+│   │   ├── 📄 server.ts         # Main server file
+│   │   ├── 📄 app.ts           # Express app setup
+│   │   ├── config/
+│   │   │   └── 📄 db.ts        # MongoDB connection
+│   │   ├── controllers/
+│   │   │   ├── 📄 authController.ts
+│   │   │   └── 📄 sweetController.ts
+│   │   ├── middleware/
+│   │   │   ├── 📄 authMiddleware.ts
+│   │   │   └── 📄 errorHandler.ts
+│   │   ├── models/
+│   │   │   ├── 📄 Sweet.ts
+│   │   │   └── 📄 User.ts
+│   │   ├── routes/
+│   │   │   ├── 📄 authRoutes.ts
+│   │   │   └── 📄 sweetRoutes.ts
+│   │   └── services/
+│   │       ├── 📄 authService.ts
+│   │       └── 📄 sweetService.ts
+│   └── tests/
+│       ├── 📄 auth.test.ts
+│       └── 📄 sweets.test.ts
+│
+└── frontend/                    # React SPA
+    ├── 📄 package.json
+    ├── 📄 tsconfig.json
+    ├── 📄 vite.config.ts
+    ├── 📄 tailwind.config.js
+    ├── 📄 index.html
+    ├── src/
+    │   ├── 📄 main.tsx         # App entry point
+    │   ├── 📄 App.tsx          # Main app component
+    │   ├── 📄 index.css        # Global styles
+    │   ├── components/
+    │   │   ├── 📄 Layout.tsx
+    │   │   ├── 📄 Navigation.tsx
+    │   │   ├── 📄 SweetCard.tsx
+    │   │   ├── 📄 SweetFormModal.tsx
+    │   │   ├── 📄 SearchBar.tsx
+    │   │   ├── 📄 LoadingSpinner.tsx
+    │   │   ├── 📄 ProtectedRoute.tsx
+    │   │   └── 📄 RestockModal.tsx
+    │   ├── contexts/
+    │   │   ├── 📄 AuthContext.tsx
+    │   │   ├── 📄 ToastContext.tsx
+    │   │   └── 📄 CartContext.tsx    # 🆕 Shopping cart state
+    │   ├── pages/
+    │   │   ├── 📄 Landing.tsx
+    │   │   ├── 📄 Login.tsx
+    │   │   ├── 📄 Register.tsx
+    │   │   ├── 📄 Shop.tsx
+    │   │   ├── 📄 CategoryShop.tsx
+    │   │   ├── 📄 SweetDetail.tsx
+    │   │   ├── 📄 Dashboard.tsx
+    │   │   ├── 📄 AdminDashboard.tsx
+    │   │   ├── 📄 AddSweet.tsx       # 🆕 Admin: Add products
+    │   │   ├── 📄 ManageCategories.tsx # 🆕 Admin: View categories
+    │   │   ├── 📄 TotalSweets.tsx    # 🆕 Admin: Inventory stats
+    │   │   ├── 📄 ManageInventory.tsx # 🆕 Admin: Inventory access
+    │   │   └── 📄 Cart.tsx           # 🆕 Shopping cart page
+    │   ├── services/
+    │   │   └── 📄 api.ts
+    │   └── types/
+    │       └── 📄 index.ts
+    └── public/
+        └── 📄 vite.svg
 ```
 
 ---
