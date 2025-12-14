@@ -7,6 +7,7 @@ import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Shop } from './pages/Shop';
+import { CategoryShop } from './pages/CategoryShop';
 import { SweetDetail } from './pages/SweetDetail';
 import { Dashboard } from './pages/Dashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
@@ -22,6 +23,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/shop" element={<Shop />} />
+              <Route path="/shop/:category" element={<CategoryShop />} />
               <Route path="/sweets/:id" element={<SweetDetail />} />
               <Route
                 path="/dashboard"

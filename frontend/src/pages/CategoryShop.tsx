@@ -1,57 +1,40 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { sweetsApi } from '../services/api';
-import { Sweet, SearchParams } from '../types';
+import { Sweet } from '../types';
 import { SweetCard } from '../components/SweetCard';
-import { SearchBar } from '../components/SearchBar';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
 
-const categories = ['all', 'cake', 'candy', 'chocolate', 'lollipop', 'cookie'];
+const categories = ['cake', 'candy', 'chocolate', 'lollipop', 'cookie'];
 
-export const Shop = () => {
+export const CategoryShop = () => {
+  const { category } = useParams<{ category: string }>();
   const navigate = useNavigate();
   const [sweets, setSweets] = useState<Sweet[]>([]);
-  const [filteredSweets, setFilteredSweets] = useState<Sweet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState<'name' | 'price-low' | 'price-high'>('name');
   const { showToast } = useToast();
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
+    if (!category || !categories.includes(category)) {
+      navigate('/shop');
+      return;
+    }
     fetchSweets();
-  }, []);
-
-  useEffect(() => {
-    sortSweets();
-  }, [sweets, sortBy]);
+  }, [category]);
 
   const fetchSweets = async () => {
     try {
       setIsLoading(true);
       const data = await sweetsApi.getAll();
-      setSweets(data);
+      const filtered = data.filter((sweet: Sweet) => sweet.category === category);
+      setSweets(filtered);
     } catch (error) {
       showToast('Failed to load sweets', 'error');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSearch = async (params: SearchParams) => {
-    if (!params.q && !params.priceMin && !params.priceMax) {
-      setFilteredSweets(sortedSweets);
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      const data = await sweetsApi.search(params);
-      setFilteredSweets(data.sweets);
-    } catch (error) {
-      showToast('Search failed', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -63,10 +46,6 @@ export const Shop = () => {
     if (sortBy === 'price-high') return b.price - a.price;
     return 0;
   });
-
-  const sortSweets = () => {
-    setFilteredSweets(sortedSweets);
-  };
 
   const handlePurchase = async (id: string, quantity: number) => {
     if (!isAuthenticated) {
@@ -84,7 +63,7 @@ export const Shop = () => {
     }
   };
 
-  if (isLoading && sweets.length === 0) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center">
         <LoadingSpinner />
@@ -100,36 +79,21 @@ export const Shop = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-5xl font-bold text-gray-800 mb-4 text-center">Sweet Shop</h1>
+          <button
+            onClick={() => navigate('/shop')}
+            className="mb-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+          >
+            ← Back to All Sweets
+          </button>
+          <h1 className="text-5xl font-bold text-gray-800 mb-4 text-center capitalize">
+            {category} Collection
+          </h1>
           <p className="text-gray-600 text-center text-lg mb-8">
-            Browse our delicious collection of treats
+            Discover our delicious {category} treats
           </p>
-          <SearchBar onSearch={handleSearch} />
         </motion.div>
 
-        <div className="mb-6 flex flex-wrap gap-4 items-center justify-between">
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => navigate('/shop')}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all capitalize ${
-                true
-                  ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-md'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200'
-              }`}
-            >
-              All Sweets
-            </button>
-            {categories.slice(1).map((category) => (
-              <button
-                key={category}
-                onClick={() => navigate(`/shop/${category}`)}
-                className="px-4 py-2 rounded-lg font-semibold transition-all capitalize bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-
+        <div className="mb-6 flex justify-end">
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
@@ -141,13 +105,15 @@ export const Shop = () => {
           </select>
         </div>
 
-        {isLoading ? (
-          <div className="flex justify-center py-20">
-            <LoadingSpinner />
-          </div>
-        ) : filteredSweets.length === 0 ? (
+        {sortedSweets.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-2xl text-gray-600">No sweets found</p>
+            <p className="text-2xl text-gray-600">No {category} sweets available</p>
+            <button
+              onClick={() => navigate('/shop')}
+              className="mt-4 px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg hover:from-pink-600 hover:to-purple-600 transition-all"
+            >
+              Browse All Sweets
+            </button>
           </div>
         ) : (
           <motion.div
@@ -155,7 +121,7 @@ export const Shop = () => {
             animate={{ opacity: 1 }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
           >
-            {filteredSweets.map((sweet, index) => (
+            {sortedSweets.map((sweet, index) => (
               <motion.div
                 key={sweet._id}
                 initial={{ opacity: 0, y: 20 }}
