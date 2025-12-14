@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, Package, Edit, Trash2 } from 'lucide-react';
 import { Sweet } from '../types';
 import { Link } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
+import { useToast } from '../contexts/ToastContext';
 
 interface SweetCardProps {
   sweet: Sweet;
@@ -32,7 +34,14 @@ const getPlaceholderImage = (category: string) => {
 };
 
 export const SweetCard = ({ sweet, onPurchase, onEdit, onDelete, isAdmin }: SweetCardProps) => {
+  const { addToCart } = useCart();
+  const { showToast } = useToast();
   const isOutOfStock = sweet.quantity === 0;
+
+  const handleAddToCart = () => {
+    addToCart(sweet, 1);
+    showToast(`${sweet.name} added to cart!`, 'success');
+  };
 
   return (
     <motion.div
@@ -101,7 +110,7 @@ export const SweetCard = ({ sweet, onPurchase, onEdit, onDelete, isAdmin }: Swee
             </>
           ) : (
             <button
-              onClick={() => onPurchase?.(sweet._id, 1)}
+              onClick={handleAddToCart}
               disabled={isOutOfStock}
               className={`flex-1 font-semibold py-2 px-4 rounded-lg transition-all flex items-center justify-center gap-2 ${
                 isOutOfStock
@@ -110,7 +119,7 @@ export const SweetCard = ({ sweet, onPurchase, onEdit, onDelete, isAdmin }: Swee
               }`}
             >
               <ShoppingCart className="w-4 h-4" />
-              {isOutOfStock ? 'Out of Stock' : 'Purchase'}
+              {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
             </button>
           )}
         </div>

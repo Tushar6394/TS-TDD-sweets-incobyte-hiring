@@ -64,3 +64,8 @@ export interface LoginRequest {
   email: string;
   password: string;
 }
+
+export interface CartItem {
+  sweet: Sweet;
+  quantity: number;
+}

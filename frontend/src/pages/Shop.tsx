@@ -202,7 +202,7 @@ export const Shop = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <SweetCard sweet={sweet} onPurchase={handlePurchase} isAdmin={false} />
+                <SweetCard sweet={sweet} isAdmin={false} />
               </motion.div>
             ))}
           </motion.div>

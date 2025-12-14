@@ -3,10 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Candy, Menu, X, User, ShoppingBag, Shield } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useCart } from '../contexts/CartContext';
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAuthenticated, user, logout, isAdmin } = useAuth();
+  const { getTotalItems } = useCart();
   const location = useLocation();
 
   const isActive = (path: string) => location.pathname === path;
@@ -56,6 +58,20 @@ export const Navigation = () => {
                     )}
                   </Link>
                 )
+            )}
+
+            {isAuthenticated && !isAdmin && (
+              <Link
+                to="/cart"
+                className="relative p-2 text-gray-700 hover:text-pink-600 transition-colors"
+              >
+                <ShoppingBag className="w-6 h-6" />
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                    {getTotalItems()}
+                  </span>
+                )}
+              </Link>
             )}
 
             {isAuthenticated ? (

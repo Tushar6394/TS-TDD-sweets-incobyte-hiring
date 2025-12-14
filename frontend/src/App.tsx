@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
+import { CartProvider } from './contexts/CartContext';
 import { Layout } from './components/Layout';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Landing } from './pages/Landing';
@@ -15,19 +16,22 @@ import { AddSweet } from './pages/AddSweet';
 import { ManageCategories } from './pages/ManageCategories';
 import { TotalSweets } from './pages/TotalSweets';
 import { ManageInventory } from './pages/ManageInventory';
+import { Cart } from './pages/Cart';
 
 function App() {
   return (
     <Router>
       <AuthProvider>
-        <ToastProvider>
-          <Layout>
+        <CartProvider>
+          <ToastProvider>
+            <Layout>
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/shop" element={<Shop />} />
               <Route path="/shop/:category" element={<CategoryShop />} />
+              <Route path="/cart" element={<Cart />} />
               <Route
                 path="/shop/add-sweet"
                 element={
@@ -81,6 +85,7 @@ function App() {
             </Routes>
           </Layout>
         </ToastProvider>
+        </CartProvider>
       </AuthProvider>
     </Router>
   );
