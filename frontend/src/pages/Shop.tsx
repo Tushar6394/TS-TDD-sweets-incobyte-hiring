@@ -141,6 +141,46 @@ export const Shop = () => {
           </select>
         </div>
 
+        {isAdmin && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 bg-white rounded-2xl p-6 border-4 border-pink-200 shadow-lg"
+          >
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Admin Panel</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <button
+                onClick={() => navigate('/shop/add-sweet')}
+                className="p-4 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl border-2 border-green-200 hover:from-green-200 hover:to-emerald-200 transition-all text-center"
+              >
+                <div className="text-2xl mb-2">🍬</div>
+                <div className="font-semibold text-green-800">Add Sweet</div>
+              </button>
+              <button
+                onClick={() => navigate('/shop/categories')}
+                className="p-4 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl border-2 border-blue-200 hover:from-blue-200 hover:to-cyan-200 transition-all text-center"
+              >
+                <div className="text-2xl mb-2">📂</div>
+                <div className="font-semibold text-blue-800">Types of Sweets</div>
+              </button>
+              <button
+                onClick={() => navigate('/shop/total-sweets')}
+                className="p-4 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl border-2 border-purple-200 hover:from-purple-200 hover:to-pink-200 transition-all text-center"
+              >
+                <div className="text-2xl mb-2">📊</div>
+                <div className="font-semibold text-purple-800">Total Sweets</div>
+              </button>
+              <button
+                onClick={() => navigate('/shop/manage-inventory')}
+                className="p-4 bg-gradient-to-br from-orange-100 to-red-100 rounded-xl border-2 border-orange-200 hover:from-orange-200 hover:to-red-200 transition-all text-center"
+              >
+                <div className="text-2xl mb-2">⚙️</div>
+                <div className="font-semibold text-orange-800">Manage Inventory</div>
+              </button>
+            </div>
+          </motion.div>
+        )}
+
         {isLoading ? (
           <div className="flex justify-center py-20">
             <LoadingSpinner />

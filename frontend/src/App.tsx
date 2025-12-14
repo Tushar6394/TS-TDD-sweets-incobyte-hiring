@@ -11,6 +11,10 @@ import { CategoryShop } from './pages/CategoryShop';
 import { SweetDetail } from './pages/SweetDetail';
 import { Dashboard } from './pages/Dashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { AddSweet } from './pages/AddSweet';
+import { ManageCategories } from './pages/ManageCategories';
+import { TotalSweets } from './pages/TotalSweets';
+import { ManageInventory } from './pages/ManageInventory';
 
 function App() {
   return (
@@ -24,6 +28,38 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/shop" element={<Shop />} />
               <Route path="/shop/:category" element={<CategoryShop />} />
+              <Route
+                path="/shop/add-sweet"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AddSweet />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/shop/categories"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <ManageCategories />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/shop/total-sweets"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <TotalSweets />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/shop/manage-inventory"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <ManageInventory />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/sweets/:id" element={<SweetDetail />} />
               <Route
                 path="/dashboard"
